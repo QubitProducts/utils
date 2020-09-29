@@ -56,7 +56,7 @@ Calls callback when the item enters the viewport, returns a function that cancel
 e.g.
 ```js
 const restore = onEnterViewport(el, function () {
-  window.alert('Hello from within the viewport!')
+  window.alert('Hello from viewport!')
 })
 ```
 
