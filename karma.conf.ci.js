@@ -39,7 +39,6 @@ function sauceConfig (baseConfig) {
     sauceLabs: { testName: 'experience-engine' },
     customLaunchers: customLaunchers,
     browsers: Object.keys(customLaunchers),
-    reporters: ['progress', 'saucelabs'],
-    coverageReporter: null
+    reporters: ['progress', 'saucelabs']
   })
 }

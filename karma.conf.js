@@ -9,7 +9,7 @@ module.exports = function (config) {
       stats: 'errors-only',
       logLevel: 'error'
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress'],
     webpack: {
       mode: 'development',
       watch: true,

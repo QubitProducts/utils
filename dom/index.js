@@ -1,9 +1,25 @@
+const _ = require('slapdash')
 const once = require('../lib/once')
 const withRestoreAll = require('../lib/withRestoreAll')
 
-function on (el, type, fn) {
+function onEvent (el, type, fn) {
   el.addEventListener(type, fn)
   return once(() => el.removeEventListener(type, fn))
+}
+
+function onEnterViewport (el, fn) {
+  if (el.getBoundingClientRect().top <= window.innerHeight) {
+    return fn()
+  }
+
+  const handleScroll = _.debounce(() => {
+    if (el.getBoundingClientRect().top <= window.innerHeight) {
+      document.removeEventListener('scroll', handleScroll)
+      fn()
+    }
+  }, 50)
+  document.addEventListener('scroll', handleScroll)
+  return once(() => document.removeEventListener('scroll', handleScroll))
 }
 
 function replace (target, el) {
@@ -26,4 +42,10 @@ function insertBefore (target, el) {
 }
 
 module.exports = () =>
-  withRestoreAll({ on, replace, insertAfter, insertBefore })
+  withRestoreAll({
+    onEvent,
+    onEnterViewport,
+    replace,
+    insertAfter,
+    insertBefore
+  })
