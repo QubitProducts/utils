@@ -8,7 +8,9 @@ describe('once', function () {
     const [stub1, cleanup1] = createFakeUtil()
     const [stub2, cleanup2] = createFakeUtil()
     const utils = { stub1, stub2 }
-    const { stub1: newStub1, stub2: newStub2, restoreAll } = withRestoreAll(utils)
+    const { stub1: newStub1, stub2: newStub2, restoreAll } = withRestoreAll(
+      utils
+    )
 
     expect(stub1.calledOnce).to.eql(false)
     expect(stub2.calledOnce).to.eql(false)

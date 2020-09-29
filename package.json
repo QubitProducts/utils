@@ -4,7 +4,10 @@
   "description": "Utilities for clientside code injection",
   "main": "index.js",
   "scripts": {
-    "test": "karma start --single-run"
+    "test": "karma start --single-run",
+    "test-ci": "karma start karma.conf.ci.js --single-run",
+    "prettier": "prettier-standard",
+    "lint": "prettier-standard --check --lint"
   },
   "author": "",
   "license": "ISC",

@@ -17,7 +17,9 @@ describe('dom', function () {
       <div id='test-2'>test two</div>
       <div id='test-3'>test three</div>
     `
-    ;([one, two, three] = _.map([1, 2, 3], i => document.querySelector(`#test-${i}`)))
+    ;[one, two, three] = _.map([1, 2, 3], i =>
+      document.querySelector(`#test-${i}`)
+    )
   })
 
   afterEach(() => {

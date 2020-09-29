@@ -25,4 +25,5 @@ function insertBefore (target, el) {
   return once(() => parent.removeChild(el))
 }
 
-module.exports = () => withRestoreAll({ on, replace, insertAfter, insertBefore })
+module.exports = () =>
+  withRestoreAll({ on, replace, insertAfter, insertBefore })
