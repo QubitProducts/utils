@@ -1,0 +1,34 @@
+{
+  "name": "@qubit/utils",
+  "version": "1.0.0",
+  "description": "Utilities for clientside code injection",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start --single-run",
+    "test-ci": "karma start karma.conf.ci.js --single-run",
+    "prettier": "prettier-standard",
+    "lint": "prettier-standard --check --lint"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "slapdash": "^1.3.3"
+  },
+  "devDependencies": {
+    "@qubit/buble": "^0.19.10",
+    "@qubit/buble-loader": "^0.5.1",
+    "chai": "^4.2.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "karma": "^5.1.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.3",
+    "karma-mocha": "^2.0.1",
+    "karma-sauce-launcher": "^2.0.2",
+    "karma-sourcemap-loader": "^0.3.8",
+    "karma-webpack": "^4.0.2",
+    "mocha": "^5.1.1",
+    "prettier-standard": "^16.4.1",
+    "sinon": "^9.0.3",
+    "webpack": "^4.44.1"
+  }
+}
