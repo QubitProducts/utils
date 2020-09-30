@@ -1,6 +1,7 @@
 const _ = require('slapdash')
 const once = require('../lib/once')
 const withRestoreAll = require('../lib/withRestoreAll')
+const promised = require('../lib/promised')
 
 function onEvent (el, type, fn) {
   el.addEventListener(type, fn)
@@ -9,7 +10,8 @@ function onEvent (el, type, fn) {
 
 function onEnterViewport (el, fn) {
   if (el.getBoundingClientRect().top <= window.innerHeight) {
-    return fn()
+    fn()
+    return () => {}
   }
 
   const handleScroll = _.debounce(() => {
@@ -41,11 +43,18 @@ function insertBefore (target, el) {
   return once(() => parent.removeChild(el))
 }
 
-module.exports = () =>
-  withRestoreAll({
+module.exports = () => {
+  const utils = withRestoreAll({
     onEvent,
     onEnterViewport,
     replace,
     insertAfter,
     insertBefore
   })
+
+  _.each(_.keys(utils), key => {
+    if (key.indexOf('on') === 0) utils[key] = promised(utils[key])
+  })
+
+  return utils
+}

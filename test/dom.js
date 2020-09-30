@@ -37,6 +37,23 @@ describe('dom', function () {
       one.click()
       expect(stub.calledOnce).to.eql(true)
     })
+
+    describe('if no callback is passed', function () {
+      it('should return a promise', function () {
+        const stub = sinon.stub()
+        onEvent(one, 'click').then(stub)
+        one.click()
+        expect(stub.calledOnce).to.eql(true)
+      })
+
+      it('should be restorable with restoreAll', function () {
+        const stub = sinon.stub()
+        onEvent(one, 'click').then(stub)
+        restoreAll()
+        one.click()
+        expect(stub.called).to.eql(false)
+      })
+    })
   })
 
   describe('replace', function () {
