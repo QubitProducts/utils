@@ -41,23 +41,31 @@ const restore = insertAfter(target, el)
 ```
 
 ## onEvent(el, type, fn)
-Adds an event listener of `type` to `el`, returning a function that removes it
+Adds an event listener of `type` to `el`, returning a function that removes it. If you omit the callback, the function returns a promise. You should use restoreAll to restore in this case.
 
 e.g.
 ```js
-const restore = onEvent(el, 'click', function () {
+const restore = onEvent(el, 'click', cb)
+
+onEvent(el, 'click').then(fn)
+
+function cb () {
   window.alert('clicked!')
-})
+}
 ```
 
 ## onEnterViewport(el, fn)
-Calls callback when `el` enters the viewport, returns a function that cancels and removes any event listeners
+Calls callback when `el` enters the viewport, returns a function that cancels and removes any event listeners. If you omit the callback, the function returns a promise. You should use restoreAll to restore in this case.
 
 e.g.
 ```js
-const restore = onEnterViewport(el, function () {
+const restore = onEnterViewport(el, cb)
+
+onEnterViewport(el).then(cb)
+
+function cb () {
   window.alert('Hello from viewport!')
-})
+}
 ```
 
 ## restoreAll()

@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "slapdash": "^1.3.3"
+    "slapdash": "^1.3.3",
+    "sync-p": "^1.3.0"
   },
   "devDependencies": {
     "@qubit/buble": "^0.19.10",
