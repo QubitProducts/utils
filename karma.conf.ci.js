@@ -43,7 +43,7 @@ module.exports = function (config) {
 
 function sauceConfig (baseConfig) {
   return Object.assign({}, baseConfig, {
-    sauceLabs: { testName: 'experience-engine' },
+    sauceLabs: { testName: '@qubit/utils' },
     customLaunchers: customLaunchers,
     browsers: Object.keys(customLaunchers),
     reporters: ['progress', 'saucelabs'],
