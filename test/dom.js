@@ -5,17 +5,28 @@ const sinon = require('sinon')
 const { expect } = require('chai')
 
 describe('dom', function () {
-  let restoreAll, onEvent, replace, insertBefore, insertAfter
+  let restoreAll, onEvent, replace, insertBefore, insertAfter, onEnterViewport
   let container, one, two, three
 
   beforeEach(() => {
-    ;({ restoreAll, onEvent, replace, insertBefore, insertAfter } = dom())
+    ;({
+      restoreAll,
+      onEvent,
+      replace,
+      insertBefore,
+      insertAfter,
+      onEnterViewport
+    } = dom())
+    document.documentElement.style.padding = 0
+    document.documentElement.style.margin = 0
+    document.body.style.margin = 0
+    document.body.style.padding = 0
     container = document.createElement('div')
     document.body.appendChild(container)
     container.innerHTML = `
-      <div id='test-1'>test one</div>
-      <div id='test-2'>test two</div>
-      <div id='test-3'>test three</div>
+      <div id='test-1' style='height:10px;background:red;'>test one</div>
+      <div id='test-2' style='height:10px;background:green;'>test two</div>
+      <div id='test-3' style='height:10px;background:blue;'>test three</div>
     `
     ;[one, two, three] = _.map([1, 2, 3], i =>
       document.querySelector(`#test-${i}`)
@@ -24,7 +35,41 @@ describe('dom', function () {
 
   afterEach(() => {
     restoreAll()
-    document.body.removeChild(container)
+    document.body.innerHTML = ''
+  })
+
+  describe('onEnterViewport', function () {
+    describe('when the element is below the viewport', function () {
+      it('should not fire', function () {
+        one.style.height = window.innerHeight + 'px'
+        const stub = sinon.stub()
+        onEnterViewport(two, stub)
+        expect(stub.called).to.eql(false)
+      })
+
+      it('should fire if it scrolls into view', function (cb) {
+        one.style.height = window.innerHeight + 'px'
+        window.scroll(0, 10)
+        onEnterViewport(two, cb)
+      })
+    })
+
+    describe('when the element is above the viewport', function () {
+      it('should not fire', function () {
+        two.style.height = window.innerHeight + 'px'
+        window.scroll(0, 10)
+        const stub = sinon.stub()
+        onEnterViewport(one, stub)
+        expect(stub.called).to.eql(false)
+      })
+
+      it('should fire if it scrolls into view', function (cb) {
+        two.style.height = window.innerHeight + 'px'
+        window.scroll(0, 10)
+        onEnterViewport(two, cb)
+        window.scroll(0, 0)
+      })
+    })
   })
 
   describe('onEvent', function () {
