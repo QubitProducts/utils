@@ -5,7 +5,13 @@ const sinon = require('sinon')
 const { expect } = require('chai')
 
 describe('dom', function () {
-  let restoreAll, onEvent, replace, insertBefore, insertAfter, onEnterViewport
+  let restoreAll,
+    onEvent,
+    replace,
+    insertBefore,
+    insertAfter,
+    style,
+    onEnterViewport
   let container, one, two, three
 
   beforeEach(() => {
@@ -13,6 +19,7 @@ describe('dom', function () {
       restoreAll,
       onEvent,
       replace,
+      style,
       insertBefore,
       insertAfter,
       onEnterViewport
@@ -40,6 +47,12 @@ describe('dom', function () {
 
   describe('onEnterViewport', function () {
     describe('when the element is below the viewport', function () {
+      it('should fire immediately if in view', function () {
+        const stub = sinon.stub()
+        onEnterViewport(one, stub)
+        expect(stub.called).to.eql(true)
+      })
+
       it('should not fire', function () {
         one.style.height = window.innerHeight + 'px'
         const stub = sinon.stub()
@@ -69,6 +82,20 @@ describe('dom', function () {
         onEnterViewport(two, cb)
         window.scroll(0, 0)
       })
+    })
+  })
+
+  describe('style', function () {
+    it('should merge the style', function () {
+      style(one, { height: '20px' })
+      expect(one.style.height).to.eql('20px')
+      expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('should restore the style', function () {
+      style(one, { height: '20px' })()
+      expect(one.style.height).to.eql('10px')
+      expect(one.style.backgroundColor).to.eql('red')
     })
   })
 

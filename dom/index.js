@@ -9,6 +9,31 @@ function onEvent (el, type, fn) {
   return once(() => el.removeEventListener(type, fn))
 }
 
+function style (el, css, fn) {
+  const originalStyle = el.getAttribute('style')
+  const merged = {
+    ...fromStyle(originalStyle),
+    ...css
+  }
+  el.setAttribute('style', toStyle(merged) || '')
+  return once(() => el.setAttribute('style', originalStyle))
+}
+
+function fromStyle (style = '') {
+  return style.split(';').reduce((memo, val) => {
+    if (!val) return memo
+    const [key, value] = val.split(':')
+    memo[key] = value
+    return memo
+  }, {})
+}
+
+function toStyle (css) {
+  return _.keys(css).reduce((memo, key) => {
+    return memo + `${key}:${css[key]};`
+  }, '')
+}
+
 function isInViewPort (el) {
   if (el && el.parentElement) {
     const { top, bottom } = el.getBoundingClientRect()
@@ -57,6 +82,7 @@ module.exports = () => {
     onEvent,
     onEnterViewport,
     replace,
+    style,
     insertAfter,
     insertBefore
   })
