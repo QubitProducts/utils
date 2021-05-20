@@ -46,13 +46,13 @@ describe('dom', function () {
   })
 
   describe('onEnterViewport', function () {
-    describe('when the element is below the viewport', function () {
-      it('should fire immediately if in view', function () {
-        const stub = sinon.stub()
-        onEnterViewport(one, stub)
-        expect(stub.called).to.eql(true)
-      })
+    it('should fire if the element is in view', function () {
+      const stub = sinon.stub()
+      onEnterViewport(one, stub)
+      expect(stub.calledOnce).to.eql(true)
+    })
 
+    describe('when the element is below the viewport', function () {
       it('should not fire', function () {
         one.style.height = window.innerHeight + 'px'
         const stub = sinon.stub()
@@ -60,27 +60,41 @@ describe('dom', function () {
         expect(stub.called).to.eql(false)
       })
 
-      it('should fire if it scrolls into view', function (cb) {
+      it('should fire when the element scrolls into view', function (cb) {
         one.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
         onEnterViewport(two, cb)
+        window.scroll(0, 200)
       })
     })
 
     describe('when the element is above the viewport', function () {
       it('should not fire', function () {
-        two.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
+        three.style.height = window.innerHeight + 'px'
+        window.scroll(0, 20)
         const stub = sinon.stub()
         onEnterViewport(one, stub)
         expect(stub.called).to.eql(false)
       })
 
-      it('should fire if it scrolls into view', function (cb) {
-        two.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
+      it('should fire when the element scrolls into view', function (cb) {
+        three.style.height = window.innerHeight + 'px'
+        window.scroll(0, 20)
         onEnterViewport(two, cb)
         window.scroll(0, 0)
+      })
+    })
+
+    describe('with multiple elements', function () {
+      it('should fire if it scrolls into view', function (cb) {
+        three.style.height = window.innerHeight + 'px'
+        window.scroll(0, 20)
+        const stub = sinon.stub()
+        onEnterViewport([one, two], stub)
+        window.scroll(0, 0)
+        setTimeout(() => {
+          expect(stub.calledTwice).to.eql(true)
+          cb()
+        }, 200)
       })
     })
   })

@@ -80,6 +80,17 @@ function cb () {
 }
 ```
 
+```js
+// With multiple elements
+const restore = onEnterViewport([el1, el2], cb)
+
+onEnterViewport([el1, el2]).then(cb)
+
+function cb () {
+  window.alert('Hello from viewport!')
+}
+```
+
 ## style(el, styles)
 
 Applies styles to `el`, returning a function that reverts those styles.

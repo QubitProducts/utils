@@ -42,7 +42,19 @@ function isInViewPort (el) {
   return false
 }
 
+function onAnyEnterViewport (els, fn) {
+  const disposables = []
+  _.each(els, el => disposables.push(onEnterViewport(el, fn)))
+  return once(() => {
+    while (disposables.length) disposables.pop()()
+  })
+}
+
 function onEnterViewport (el, fn) {
+  if (_.isArray(el)) {
+    return onAnyEnterViewport(el, fn)
+  }
+
   if (isInViewPort(el)) {
     fn()
     return noop
@@ -50,12 +62,12 @@ function onEnterViewport (el, fn) {
 
   const handleScroll = _.debounce(() => {
     if (isInViewPort(el)) {
-      document.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', handleScroll)
       fn()
     }
   }, 50)
-  document.addEventListener('scroll', handleScroll)
-  return once(() => document.removeEventListener('scroll', handleScroll))
+  window.addEventListener('scroll', handleScroll)
+  return once(() => window.removeEventListener('scroll', handleScroll))
 }
 
 function replace (target, el) {
