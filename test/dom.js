@@ -1,11 +1,18 @@
 /* globals describe it beforeEach afterEach */
+const Promise = require('sync-p')
 const _ = require('slapdash')
 const dom = require('../dom')
 const sinon = require('sinon')
 const { expect } = require('chai')
 
 describe('dom', function () {
-  let restoreAll, onEvent, replace, insertBefore, insertAfter, onEnterViewport
+  let restoreAll,
+    onEvent,
+    replace,
+    insertBefore,
+    insertAfter,
+    style,
+    onEnterViewport
   let container, one, two, three
 
   beforeEach(() => {
@@ -13,6 +20,7 @@ describe('dom', function () {
       restoreAll,
       onEvent,
       replace,
+      style,
       insertBefore,
       insertAfter,
       onEnterViewport
@@ -31,6 +39,7 @@ describe('dom', function () {
     ;[one, two, three] = _.map([1, 2, 3], i =>
       document.querySelector(`#test-${i}`)
     )
+    return scroller(0)
   })
 
   afterEach(() => {
@@ -39,36 +48,114 @@ describe('dom', function () {
   })
 
   describe('onEnterViewport', function () {
+    it('should fire if the element is in view', function () {
+      const stub = sinon.stub()
+      onEnterViewport(one, stub)
+      expect(stub.calledOnce).to.eql(true)
+    })
+
     describe('when the element is below the viewport', function () {
-      it('should not fire', function () {
+      beforeEach(() => {
         one.style.height = window.innerHeight + 'px'
+      })
+
+      it('should not fire', function () {
         const stub = sinon.stub()
         onEnterViewport(two, stub)
         expect(stub.called).to.eql(false)
       })
 
-      it('should fire if it scrolls into view', function (cb) {
-        one.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
-        onEnterViewport(two, cb)
+      it('should fire when the element scrolls into view', function () {
+        const stub = sinon.stub()
+        onEnterViewport(two, stub)
+        return scroller(20).then(() => expect(stub.callCount).to.eql(1))
+      })
+
+      it('should fire when the element eventually scrolls into view', function () {
+        const stub = sinon.stub()
+        onEnterViewport(three, stub)
+        return scroller(10)
+          .then(() => wait(100))
+          .then(() => expect(stub.callCount).to.eql(0))
+          .then(() => scroller(20))
+          .then(() => expect(stub.callCount).to.eql(1))
+      })
+    })
+
+    describe('when the element is not in the dom', function () {
+      it('should fire after scrolling into view', function () {
+        two.style.height = window.innerHeight + 'px'
+        container.removeChild(one)
+        const stub = sinon.stub()
+        onEnterViewport(one, stub)
+        expect(stub.called).to.eql(false)
+        container.appendChild(one)
+        return scroller(20).then(() => expect(stub.callCount).to.eql(1))
       })
     })
 
     describe('when the element is above the viewport', function () {
+      beforeEach(() => {
+        three.style.height = window.innerHeight + 'px'
+        return scroller(20)
+      })
+
       it('should not fire', function () {
-        two.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
         const stub = sinon.stub()
         onEnterViewport(one, stub)
         expect(stub.called).to.eql(false)
       })
 
-      it('should fire if it scrolls into view', function (cb) {
-        two.style.height = window.innerHeight + 'px'
-        window.scroll(0, 10)
-        onEnterViewport(two, cb)
-        window.scroll(0, 0)
+      it('should fire when the element scrolls into view', function () {
+        const stub = sinon.stub()
+        onEnterViewport(two, stub)
+        return scroller(0).then(() => {
+          expect(stub.called).to.eql(true)
+        })
       })
+
+      describe('with multiple elements', function () {
+        it('should fire if it scrolls into view', function () {
+          const stub = sinon.stub()
+          onEnterViewport([one, two], stub)
+          return scroller(0)
+            .then(() => wait(100))
+            .then(() => expect(stub.calledTwice).to.eql(true))
+        })
+      })
+    })
+  })
+
+  describe('style', function () {
+    it('should merge the style', function () {
+      style(one, { height: '20px' })
+      expect(one.style.height).to.eql('20px')
+      expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('should merge the style with string syntax', function () {
+      style(one, `height: 20px`)
+      expect(one.style.height).to.eql('20px')
+      expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('kebabs', function () {
+      style(one, { backgroundColor: 'green' })
+      expect(one.style.backgroundColor).to.eql('green')
+    })
+
+    it('should restore the style', function () {
+      style(one, { height: '20px' })()
+      expect(one.style.height).to.eql('10px')
+      expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('should handle elements with no style attributes', function () {
+      const div = document.createElement('div')
+      const restore = style(div, { height: '20px' })
+      expect(div.style.height).to.eql('20px')
+      restore()
+      expect(div.style.height).to.eql('')
     })
   })
 
@@ -137,4 +224,19 @@ describe('dom', function () {
 
 function fromArray (arr) {
   return _.map(arr, i => i)
+}
+
+function scroller (y) {
+  return new Promise(resolve => {
+    if (window.pageYOffset === y) return resolve()
+    window.addEventListener('scroll', function handleScroll () {
+      window.removeEventListener('scroll', handleScroll)
+      resolve()
+    })
+    window.scroll(0, y)
+  }).then(() => wait(50))
+}
+
+function wait (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

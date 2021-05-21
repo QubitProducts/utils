@@ -9,6 +9,37 @@ function onEvent (el, type, fn) {
   return once(() => el.removeEventListener(type, fn))
 }
 
+function style (el, css, fn) {
+  const originalStyle = el.getAttribute('style')
+  const newStyle = typeof css === 'string' ? fromStyle(css) : css
+  const merged = {
+    ...fromStyle(originalStyle),
+    ...newStyle
+  }
+  el.setAttribute('style', toStyle(merged))
+  return once(() => el.setAttribute('style', originalStyle))
+}
+
+function fromStyle (style) {
+  if (!style) style = ''
+  return style.split(';').reduce((memo, val) => {
+    if (!val) return memo
+    const [key, value] = val.split(':')
+    memo[key] = value
+    return memo
+  }, {})
+}
+
+function toStyle (css) {
+  return _.keys(css).reduce((memo, key) => {
+    return memo + `${kebab(key)}:${css[key]};`
+  }, '')
+}
+
+function kebab (str) {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase()
+}
+
 function isInViewPort (el) {
   if (el && el.parentElement) {
     const { top, bottom } = el.getBoundingClientRect()
@@ -17,7 +48,19 @@ function isInViewPort (el) {
   return false
 }
 
+function onAnyEnterViewport (els, fn) {
+  const disposables = []
+  _.each(els, el => disposables.push(onEnterViewport(el, fn)))
+  return once(() => {
+    while (disposables.length) disposables.pop()()
+  })
+}
+
 function onEnterViewport (el, fn) {
+  if (_.isArray(el)) {
+    return onAnyEnterViewport(el, fn)
+  }
+
   if (isInViewPort(el)) {
     fn()
     return noop
@@ -25,12 +68,12 @@ function onEnterViewport (el, fn) {
 
   const handleScroll = _.debounce(() => {
     if (isInViewPort(el)) {
-      document.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', handleScroll)
       fn()
     }
   }, 50)
-  document.addEventListener('scroll', handleScroll)
-  return once(() => document.removeEventListener('scroll', handleScroll))
+  window.addEventListener('scroll', handleScroll)
+  return once(() => window.removeEventListener('scroll', handleScroll))
 }
 
 function replace (target, el) {
@@ -57,6 +100,7 @@ module.exports = () => {
     onEvent,
     onEnterViewport,
     replace,
+    style,
     insertAfter,
     insertBefore
   })

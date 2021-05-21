@@ -1,16 +1,9 @@
-const isDocker = require('is-docker')()
 const karmaConfig = require('./karma.conf')
 const customLaunchers = {
-  ChromeCustom: {
-    base: 'ChromeHeadless',
-    // We must disable the Chrome sandbox when running Chrome inside Docker (Chrome's sandbox needs
-    // more permissions than Docker allows by default)
-    flags: isDocker ? ['--no-sandbox'] : []
-  },
   sl_firefox: {
     base: 'SauceLabs',
     browserName: 'firefox',
-    version: '30'
+    version: '68'
   },
   sl_ios_safari_10: {
     base: 'SauceLabs',
