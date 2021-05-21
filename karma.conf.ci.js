@@ -10,7 +10,7 @@ const customLaunchers = {
   sl_firefox: {
     base: 'SauceLabs',
     browserName: 'firefox',
-    version: '30'
+    version: '68'
   },
   sl_ios_safari_10: {
     base: 'SauceLabs',
