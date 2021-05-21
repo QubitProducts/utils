@@ -45,6 +45,7 @@ spec:
             PATH=$PATH:$(pwd)/node_modules/.bin
             npm i
             npm run lint
+            npm run coverage
             npm run test-ci
         workingDir: /src
         env:

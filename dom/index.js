@@ -15,11 +15,12 @@ function style (el, css, fn) {
     ...fromStyle(originalStyle),
     ...css
   }
-  el.setAttribute('style', toStyle(merged) || '')
+  el.setAttribute('style', toStyle(merged))
   return once(() => el.setAttribute('style', originalStyle))
 }
 
-function fromStyle (style = '') {
+function fromStyle (style) {
+  if (!style) style = ''
   return style.split(';').reduce((memo, val) => {
     if (!val) return memo
     const [key, value] = val.split(':')
