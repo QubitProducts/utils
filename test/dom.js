@@ -228,7 +228,7 @@ function fromArray (arr) {
 
 function scroller (y) {
   return new Promise(resolve => {
-    if (window.scrollY === y) return resolve()
+    if (window.pageYOffset === y) return resolve()
     window.addEventListener('scroll', function handleScroll () {
       window.removeEventListener('scroll', handleScroll)
       resolve()
