@@ -133,6 +133,17 @@ describe('dom', function () {
       expect(one.style.backgroundColor).to.eql('red')
     })
 
+    it('should merge the style with string syntax', function () {
+      style(one, `height: 20px`)
+      expect(one.style.height).to.eql('20px')
+      expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('kebabs', function () {
+      style(one, { backgroundColor: 'green' })
+      expect(one.style.backgroundColor).to.eql('green')
+    })
+
     it('should restore the style', function () {
       style(one, { height: '20px' })()
       expect(one.style.height).to.eql('10px')

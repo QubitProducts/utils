@@ -11,9 +11,10 @@ function onEvent (el, type, fn) {
 
 function style (el, css, fn) {
   const originalStyle = el.getAttribute('style')
+  const newStyle = typeof css === 'string' ? fromStyle(css) : css
   const merged = {
     ...fromStyle(originalStyle),
-    ...css
+    ...newStyle
   }
   el.setAttribute('style', toStyle(merged))
   return once(() => el.setAttribute('style', originalStyle))
@@ -31,8 +32,12 @@ function fromStyle (style) {
 
 function toStyle (css) {
   return _.keys(css).reduce((memo, key) => {
-    return memo + `${key}:${css[key]};`
+    return memo + `${kebab(key)}:${css[key]};`
   }, '')
+}
+
+function kebab (str) {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase()
 }
 
 function isInViewPort (el) {

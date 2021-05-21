@@ -98,7 +98,14 @@ Applies styles to `el`, returning a function that reverts those styles.
 e.g.
 
 ````js
-const restore = style(el, { height: '10px' })
+const restore = style(el, { height: '10px', backgroundColor: 'red' })
+
+// or 
+const restore = style(el, `
+  background-color: red;
+  height: 10px;
+` })
+
 
 ## restoreAll()
 
