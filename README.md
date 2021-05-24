@@ -109,7 +109,7 @@ const restore = style(el, {
 const restore = style(el, `
   background-color: red;
   height: 10px;
-` })
+`)
 ```
 
 ## restoreAll()
