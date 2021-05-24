@@ -93,19 +93,24 @@ function cb () {
 
 ## style(el, styles)
 
-Applies styles to `el`, returning a function that reverts those styles.
+Merges specified styles to `el`, returning a function that reverts your changes.
+
+Styles can be specified in either camel case or kebab case and can be provided either as a string or an object.
 
 e.g.
 
-````js
-const restore = style(el, { height: '10px', backgroundColor: 'red' })
+```js
+const restore = style(el, {
+  height: '10px',
+  backgroundColor: 'red'
+})
 
-// or 
+// or
 const restore = style(el, `
   background-color: red;
   height: 10px;
 ` })
-
+```
 
 ## restoreAll()
 
