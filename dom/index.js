@@ -43,7 +43,7 @@ function kebab (str) {
 function isInViewPort (el) {
   if (el && el.parentElement) {
     const { top, bottom } = el.getBoundingClientRect()
-    return top < window.innerHeight && bottom > 0
+    return top < window.innerHeight && bottom >= 0
   }
   return false
 }

@@ -54,6 +54,14 @@ describe('dom', function () {
       expect(stub.calledOnce).to.eql(true)
     })
 
+    it('should fire if the element is in view and has no height', function () {
+      const stub = sinon.stub()
+      const four = document.createElement('div')
+      container.prepend(four)
+      onEnterViewport(four, stub)
+      expect(stub.calledOnce).to.eql(true)
+    })
+
     describe('when the element is below the viewport', function () {
       beforeEach(() => {
         one.style.height = window.innerHeight + 'px'
