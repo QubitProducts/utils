@@ -1,6 +1,6 @@
 {
   "name": "@qubit/utils",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Utilities for clientside code injection",
   "main": "dom/index.js",
   "scripts": {
