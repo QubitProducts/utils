@@ -148,7 +148,7 @@ describe('dom', function () {
 
       it('should fire when the element becomes viewable', function () {
         const stub = sinon.stub()
-        zero.style['margin-top'] = '0'
+        zero.style.marginTop = '0'
         onEnterViewport(zero, stub)
         expect(stub.called).to.eql(true)
       })
