@@ -102,7 +102,7 @@ describe('dom', function () {
       })
     })
 
-    describe('when the element is above the viewport', function () {
+    describe('when the element is above the viewport due to scroll position', function () {
       beforeEach(() => {
         three.style.height = window.innerHeight + 'px'
         return scroller(20)
@@ -130,6 +130,27 @@ describe('dom', function () {
             .then(() => wait(100))
             .then(() => expect(stub.calledTwice).to.eql(true))
         })
+      })
+    })
+
+    describe('when the element is above the viewport due to negative margins', function () {
+      let zero
+      beforeEach(() => {
+        container.innerHTML = `<div id='test-0' style='height:10px;margin-top:-10px'>test 0</div>`
+        zero = container.querySelector('#test-0')
+      })
+
+      it('should not fire', function () {
+        const stub = sinon.stub()
+        onEnterViewport(zero, stub)
+        expect(stub.called).to.eql(false)
+      })
+
+      it('should fire when the element becomes viewable', function () {
+        const stub = sinon.stub()
+        zero.style['margin-top'] = '0'
+        onEnterViewport(zero, stub)
+        expect(stub.called).to.eql(true)
       })
     })
   })
