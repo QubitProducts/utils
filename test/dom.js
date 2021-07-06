@@ -54,13 +54,27 @@ describe('dom', function () {
       expect(stub.calledOnce).to.eql(true)
     })
 
-    it('should fire if the element is in view and has no height', function () {
-      const stub = sinon.stub()
-      container.insertAdjacentHTML('afterbegin', '<div id="test-4"></div>')
-      const four = container.querySelector('#test-4')
-      onEnterViewport(four, stub)
-      expect(stub.calledOnce).to.eql(true)
+    describe('when the element has no height', function () {
+      it('should fire if the element is at the top of the viewport', function () {
+        const stub = sinon.stub()
+        container.insertAdjacentHTML('afterbegin', '<div id="test-4"></div>')
+        const four = container.querySelector('#test-4')
+        onEnterViewport(four, stub)
+        expect(stub.calledOnce).to.eql(true)
+      })
+
+      it('should fire if the element is at the bottom of the viewport', function () {
+        const stub = sinon.stub()
+        container.innerHTML = `
+          <div id='test-1' style='height:100vh;backgrounnd-color:red;'>test 1</div>
+          <div id='test-4'></div>
+        `
+        const four = container.querySelector('#test-4')
+        onEnterViewport(four, stub)
+        expect(stub.calledOnce).to.eql(true)
+      })
     })
+
 
     describe('when the element is below the viewport', function () {
       beforeEach(() => {
