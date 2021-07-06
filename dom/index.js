@@ -43,9 +43,24 @@ function kebab (str) {
 function isInViewPort (el) {
   if (el && el.parentElement) {
     const { top, bottom } = el.getBoundingClientRect()
-    return top < window.innerHeight && bottom >= 0
+    const isAboveWindowsBottom =
+      top === bottom
+        ? // If both bottom and top are at window.innerHeight
+          // the element is entirely inside the viewport
+          top <= window.innerHeight
+        : // If the element has height, when top is at window.innerHeight
+          // the element is below the window
+          top < window.innerHeight
+    const isBelowWindowsTop =
+      top === bottom
+        ? // If both bottom and top are at 0px
+          // the element is entirely inside the viewport
+          bottom >= 0
+        : // If the element has height, when bottom is at 0px
+          // the element is above the window
+          bottom > 0
+    return isAboveWindowsBottom && isBelowWindowsTop
   }
-  return false
 }
 
 function onAnyEnterViewport (els, fn) {
