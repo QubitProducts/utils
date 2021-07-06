@@ -24,8 +24,8 @@ function fromStyle (style) {
   if (!style) style = ''
   return style.split(';').reduce((memo, val) => {
     if (!val) return memo
-    const [key, value] = val.split(':')
-    memo[key] = value
+    const [key, ...value] = val.split(':')
+    memo[key] = value.join(':')
     return memo
   }, {})
 }
