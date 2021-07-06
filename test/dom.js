@@ -75,7 +75,6 @@ describe('dom', function () {
       })
     })
 
-
     describe('when the element is below the viewport', function () {
       beforeEach(() => {
         one.style.height = window.innerHeight + 'px'
@@ -174,6 +173,14 @@ describe('dom', function () {
       style(one, { height: '20px' })
       expect(one.style.height).to.eql('20px')
       expect(one.style.backgroundColor).to.eql('red')
+    })
+
+    it('should handle urls', function () {
+      const url = 'url(https://example.qubit/1.png)'
+      one.style.backgroundImage = url
+      style(one, { display: 'none' })
+      expect(one.style.display).to.eql('none')
+      expect(one.style.backgroundImage.replace(/"/g, '')).to.eql(url)
     })
 
     it('should merge the style with string syntax', function () {

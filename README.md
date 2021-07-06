@@ -106,10 +106,13 @@ const restore = style(el, {
 })
 
 // or
-const restore = style(el, `
+const restore = style(
+  el,
+  `
   background-color: red;
   height: 10px;
-`)
+`
+)
 ```
 
 ## restoreAll()
@@ -129,4 +132,4 @@ const restore2 = onEvent(el, 'click', handler)
 
 restore1()
 restore2()
-````
+```
