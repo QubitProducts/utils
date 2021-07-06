@@ -43,7 +43,14 @@ function kebab (str) {
 function isInViewPort (el) {
   if (el && el.parentElement) {
     const { top, bottom } = el.getBoundingClientRect()
-    const isAboveWindowsBottom = top < window.innerHeight
+    const isAboveWindowsBottom =
+      top === bottom
+        ? // If both bottom and top are at window.innerHeight
+          // the element is entirely inside the viewport
+          top <= window.innerHeight
+        : // If the element has height, when top is at window.innerHeight
+          // the element is below the window
+          top < window.innerHeight
     const isBelowWindowsTop =
       top === bottom
         ? // If both bottom and top are at 0px
