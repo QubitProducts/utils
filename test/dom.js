@@ -12,7 +12,9 @@ describe('dom', function () {
     insertBefore,
     insertAfter,
     style,
-    onEnterViewport
+    onEnterViewport,
+    mapElements,
+    forEachElement
   let container, one, two, three
 
   beforeEach(() => {
@@ -23,7 +25,9 @@ describe('dom', function () {
       style,
       insertBefore,
       insertAfter,
-      onEnterViewport
+      onEnterViewport,
+      mapElements,
+      forEachElement
     } = dom())
     document.documentElement.style.padding = 0
     document.documentElement.style.margin = 0
@@ -268,6 +272,75 @@ describe('dom', function () {
       expect(fromArray(container.children)).to.eql([one, two, dummy, three])
       restore()
       expect(fromArray(container.children)).to.eql([one, two, three])
+    })
+  })
+
+  describe('mapElements', () => {
+    it('maps a node list', () => {
+      const node = document.createElement('div')
+      node.innerHTML = `
+        <div data-product-id="product_1"/>
+        <div data-product-id="product_2"/>
+      `
+
+      const nodelist = node.querySelectorAll('div')
+      const productIds = mapElements(nodelist, e => e.dataset.productId)
+      expect(productIds).to.eql(['product_1', 'product_2'])
+    })
+
+    it('maps an array', () => {
+      const arr = [1, 2]
+      const productIds = mapElements(arr, e => e)
+      expect(productIds).to.eql([1, 2])
+    })
+
+    it('throws when mapping non-iterable', () => {
+      const nonIterable = {}
+      expect(() => mapElements(nonIterable, e => e)).to.throw(
+        'Could not iterate on {}'
+      )
+    })
+
+    it('throws when mapping string', () => {
+      expect(() => mapElements('a string', e => e)).to.throw(
+        'Could not iterate on "a string"'
+      )
+    })
+  })
+
+  describe('forEachElement', () => {
+    it('executes for a list of elements', () => {
+      const node = document.createElement('div')
+      node.innerHTML = `
+        <div data-product-id="product_1"/>
+        <div data-product-id="product_2"/>
+      `
+
+      const productIds = []
+      const nodelist = node.querySelectorAll('div')
+
+      forEachElement(nodelist, e => productIds.push(e.dataset.productId))
+      expect(productIds).to.eql(['product_1', 'product_2'])
+    })
+
+    it('executes for an array', () => {
+      const arr = [1, 2]
+      const productIds = []
+      forEachElement(arr, e => productIds.push(e))
+      expect(productIds).to.eql([1, 2])
+    })
+
+    it('throws when executing on non-iterable', () => {
+      const nonIterable = {}
+      expect(() => forEachElement(nonIterable, e => e)).to.throw(
+        'Could not iterate on {}'
+      )
+    })
+
+    it('throws when executing on string', () => {
+      expect(() => forEachElement('a string', e => e)).to.throw(
+        'Could not iterate on "a string"'
+      )
     })
   })
 })

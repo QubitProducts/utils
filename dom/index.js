@@ -1,6 +1,7 @@
 const _ = require('slapdash')
 const once = require('../lib/once')
 const withRestoreAll = require('../lib/withRestoreAll')
+const checkIfIterable = require('../lib/checkIfIterable')
 const promised = require('../lib/promised')
 const noop = () => {}
 
@@ -110,6 +111,16 @@ function insertBefore (target, el) {
   return once(() => parent.removeChild(el))
 }
 
+function mapElements (elements, cb) {
+  checkIfIterable(elements)
+  return Array.prototype.map.call(elements, cb)
+}
+
+function forEachElement (elements, cb) {
+  checkIfIterable(elements)
+  Array.prototype.forEach.call(elements, cb)
+}
+
 module.exports = () => {
   const utils = withRestoreAll({
     onEvent,
@@ -124,5 +135,5 @@ module.exports = () => {
     if (key.indexOf('on') === 0) utils[key] = promised(utils[key])
   })
 
-  return utils
+  return { ...utils, mapElements, forEachElement }
 }
