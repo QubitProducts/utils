@@ -11,6 +11,7 @@ describe('dom', function () {
     replace,
     insertBefore,
     insertAfter,
+    appendChild,
     style,
     onEnterViewport
   let container, one, two, three
@@ -23,6 +24,7 @@ describe('dom', function () {
       style,
       insertBefore,
       insertAfter,
+      appendChild,
       onEnterViewport
     } = dom())
     document.documentElement.style.padding = 0
@@ -268,6 +270,19 @@ describe('dom', function () {
       expect(fromArray(container.children)).to.eql([one, two, dummy, three])
       restore()
       expect(fromArray(container.children)).to.eql([one, two, three])
+    })
+  })
+
+  describe('appendChild', function () {
+    it('should appendChild an element and return a restore function', function () {
+      const dummy = document.createElement('div')
+      dummy.id = 'dummy'
+      const restore = appendChild(two, dummy)
+      expect(fromArray(container.children)).to.eql([one, two, three])
+      expect(fromArray(two.children)).to.eql([dummy])
+      restore()
+      expect(fromArray(container.children)).to.eql([one, two, three])
+      expect(fromArray(two.children)).to.eql([])      
     })
   })
 })
