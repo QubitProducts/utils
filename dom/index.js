@@ -110,6 +110,11 @@ function insertBefore (target, el) {
   return once(() => parent.removeChild(el))
 }
 
+function appendChild (target, el) {
+  target.appendChild(el)
+  return once(() => target.removeChild(el))
+}
+
 module.exports = () => {
   const utils = withRestoreAll({
     onEvent,
@@ -117,7 +122,8 @@ module.exports = () => {
     replace,
     style,
     insertAfter,
-    insertBefore
+    insertBefore,
+    appendChild
   })
 
   _.each(_.keys(utils), key => {
