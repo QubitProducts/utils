@@ -11,6 +11,7 @@ const {
   replace,
   insertBefore,
   insertAfter,
+  appendChild,
   onEvent,
   style,
   onEnterViewport,
@@ -26,6 +27,16 @@ e.g.
 
 ```js
 const restore = replace(target, el)
+```
+
+## appendChild(target, el)
+
+Appends `el` to the end of `target`'s list of children, returns a function that removes `el`
+
+e.g.
+
+```js
+const restore = appendChild(target, el)
 ```
 
 ## insertBefore(target, el)
