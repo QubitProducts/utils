@@ -144,3 +144,13 @@ const restore2 = onEvent(el, 'click', handler)
 restore1()
 restore2()
 ```
+
+## closest(el, selector)
+
+Traverses the Element and its parents (heading toward the document root) until it finds a node that matches the provided selector string. Will return itself or the matching ancestor. If no such element exists, it returns null.
+
+Functionality is the same as described in https://developer.mozilla.org/en-US/docs/Web/API/Element/closest but this is a function that takes an element as the first argument rather than a method called on a DOM node. e.g.
+
+```js
+const closestElement = closest(targetElement, selectors)
+```
