@@ -325,6 +325,29 @@ describe('dom', function () {
         const result = closest(target, '.im-not-here')
         expect(result).to.eql(null)
       })
+
+      describe('without window.Element.prototype.matches', function () {
+        const ogMatches = window.Element.prototype.matches
+        beforeEach(() => {
+          delete window.Element.prototype.matches
+        })
+
+        afterEach(() => {
+          window.Element.prototype.matches = ogMatches
+        })
+
+        it('should return the closest element to the provided element using the selector if that element exists', function () {
+          const target = document.getElementById('test-1')
+          const result = closest(target, '.container')
+          expect(result.classList.contains('container')).to.eql(true)
+        })
+
+        it('should return null if no closest element can be found using the selector', function () {
+          const target = document.getElementById('test-1')
+          const result = closest(target, '.im-not-here')
+          expect(result).to.eql(null)
+        })
+      })
     })
   })
 })
