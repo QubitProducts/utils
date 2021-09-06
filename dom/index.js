@@ -123,7 +123,8 @@ module.exports = () => {
     style,
     insertAfter,
     insertBefore,
-    appendChild
+    appendChild,
+    closest
   })
 
   _.each(_.keys(utils), key => {
@@ -131,4 +132,22 @@ module.exports = () => {
   })
 
   return utils
+}
+
+function closest (element, selector) {
+  if (window.Element.prototype.closest) {
+    return window.Element.prototype.closest.call(element, selector)
+  } else {
+    const matches = window.Element.prototype.matches ||
+      window.Element.prototype.msMatchesSelector ||
+      window.Element.prototype.webkitMatchesSelector
+
+    let el = element
+
+    do {
+      if (matches.call(el, selector)) return el
+      el = el.parentElement || el.parentNode
+    } while (el !== null && el.nodeType === 1)
+    return null
+  }
 }

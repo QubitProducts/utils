@@ -13,7 +13,8 @@ describe('dom', function () {
     insertAfter,
     appendChild,
     style,
-    onEnterViewport
+    onEnterViewport,
+    closest
   let container, one, two, three
 
   beforeEach(() => {
@@ -25,13 +26,15 @@ describe('dom', function () {
       insertBefore,
       insertAfter,
       appendChild,
-      onEnterViewport
+      onEnterViewport,
+      closest
     } = dom())
     document.documentElement.style.padding = 0
     document.documentElement.style.margin = 0
     document.body.style.margin = 0
     document.body.style.padding = 0
     container = document.createElement('div')
+    container.classList.add('container')
     document.body.appendChild(container)
     container.innerHTML = `
       <div id='test-1' style='height:10px;background:red;'>test one</div>
@@ -282,7 +285,69 @@ describe('dom', function () {
       expect(fromArray(two.children)).to.eql([dummy])
       restore()
       expect(fromArray(container.children)).to.eql([one, two, three])
-      expect(fromArray(two.children)).to.eql([])      
+      expect(fromArray(two.children)).to.eql([])
+    })
+  })
+
+  describe('closest', function () {
+    describe('with window.Element.prototype.closest', function () {
+      it('should return the closest element to the provided element using the selector if that element exists', function () {
+        const target = document.getElementById('test-1')
+        const result = closest(target, '.container')
+        expect(result.classList.contains('container')).to.eql(true)
+      })
+
+      it('should return null if no closest element can be found using the selector', function () {
+        const target = document.getElementById('test-1')
+        const result = closest(target, '.im-not-here')
+        expect(result).to.eql(null)
+      })
+    })
+
+    describe('without window.Element.prototype.closest', function () {
+      const ogClosest = window.Element.prototype.closest
+      beforeEach(() => {
+        delete window.Element.prototype.closest
+      })
+
+      afterEach(() => {
+        window.Element.prototype.closest = ogClosest
+      })
+
+      it('should return the closest element to the provided element using the selector if that element exists', function () {
+        const target = document.getElementById('test-1')
+        const result = closest(target, '.container')
+        expect(result.classList.contains('container')).to.eql(true)
+      })
+
+      it('should return null if no closest element can be found using the selector', function () {
+        const target = document.getElementById('test-1')
+        const result = closest(target, '.im-not-here')
+        expect(result).to.eql(null)
+      })
+
+      describe('without window.Element.prototype.matches', function () {
+        const ogMatches = window.Element.prototype.matches
+        beforeEach(() => {
+          delete window.Element.prototype.matches
+        })
+
+        afterEach(() => {
+          window.Element.prototype.matches = ogMatches
+        })
+
+        it('should return the closest element to the provided element using the selector if that element exists', function () {
+          const target = document.getElementById('test-1')
+          const result = closest(target, '.container')
+          expect(result.classList.contains('container')).to.eql(true)
+        })
+
+        it('should return null if no closest element can be found using the selector', function () {
+          const target = document.getElementById('test-1')
+          const result = closest(target, '.im-not-here')
+          expect(result).to.eql(null)
+        })
+      })
     })
   })
 })
