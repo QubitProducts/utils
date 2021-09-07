@@ -1,5 +1,5 @@
 /* globals describe it */
-const withRestoreAll = require('../lib/withRestoreAll')
+const withRestoreAll = require('../../lib/withRestoreAll')
 const sinon = require('sinon')
 const { expect } = require('chai')
 

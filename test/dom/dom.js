@@ -1,7 +1,7 @@
 /* globals describe it beforeEach afterEach */
 const Promise = require('sync-p')
 const _ = require('slapdash')
-const dom = require('../dom')
+const dom = require('../../dom')
 const sinon = require('sinon')
 const { expect } = require('chai')
 
@@ -286,68 +286,6 @@ describe('dom', function () {
       restore()
       expect(fromArray(container.children)).to.eql([one, two, three])
       expect(fromArray(two.children)).to.eql([])
-    })
-  })
-
-  describe('closest', function () {
-    describe('with window.Element.prototype.closest', function () {
-      it('should return the closest element to the provided element using the selector if that element exists', function () {
-        const target = document.getElementById('test-1')
-        const result = closest(target, '.container')
-        expect(result.classList.contains('container')).to.eql(true)
-      })
-
-      it('should return null if no closest element can be found using the selector', function () {
-        const target = document.getElementById('test-1')
-        const result = closest(target, '.im-not-here')
-        expect(result).to.eql(null)
-      })
-    })
-
-    describe('without window.Element.prototype.closest', function () {
-      const ogClosest = window.Element.prototype.closest
-      beforeEach(() => {
-        delete window.Element.prototype.closest
-      })
-
-      afterEach(() => {
-        window.Element.prototype.closest = ogClosest
-      })
-
-      it('should return the closest element to the provided element using the selector if that element exists', function () {
-        const target = document.getElementById('test-1')
-        const result = closest(target, '.container')
-        expect(result.classList.contains('container')).to.eql(true)
-      })
-
-      it('should return null if no closest element can be found using the selector', function () {
-        const target = document.getElementById('test-1')
-        const result = closest(target, '.im-not-here')
-        expect(result).to.eql(null)
-      })
-
-      describe('without window.Element.prototype.matches', function () {
-        const ogMatches = window.Element.prototype.matches
-        beforeEach(() => {
-          delete window.Element.prototype.matches
-        })
-
-        afterEach(() => {
-          window.Element.prototype.matches = ogMatches
-        })
-
-        it('should return the closest element to the provided element using the selector if that element exists', function () {
-          const target = document.getElementById('test-1')
-          const result = closest(target, '.container')
-          expect(result.classList.contains('container')).to.eql(true)
-        })
-
-        it('should return null if no closest element can be found using the selector', function () {
-          const target = document.getElementById('test-1')
-          const result = closest(target, '.im-not-here')
-          expect(result).to.eql(null)
-        })
-      })
     })
   })
 })

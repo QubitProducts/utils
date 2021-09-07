@@ -1,1 +1,5 @@
 require('./html/createElement')
+require('./dom/dom')
+require('./lib/once')
+require('./lib/promised')
+require('./lib/withRestoreAll')

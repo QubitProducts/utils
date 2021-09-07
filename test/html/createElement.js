@@ -47,7 +47,7 @@ describe('HTML element create helpers', () => {
       expect(element.classList.contains(CLASS_EXAMPLE[1])).to.equal(true)
     })
 
-    it('appends an click handler to the element', () => {
+    it('appends an onclick handler to the element', () => {
       const onClick = () => 'ALPHA'
       const element = createElement({
         type: 'div',
