@@ -2,6 +2,13 @@
 
 Utilities for clientside code injection
 
+This repo contains these sets
+
+- @qubit/utils/dom
+- @qubit/html
+
+Each as a different purpose and should be required in separately as required to avoid build bloat
+
 ### @qubit/utils/dom
 
 ## Usage
@@ -153,4 +160,29 @@ Functionality is the same as described in https://developer.mozilla.org/en-US/do
 
 ```js
 const closestElement = closest(targetElement, selectors)
+```
+
+### @qubit/html
+
+## Usage
+
+```js
+const { createElement } = require('@qubit/html/createElement')
+```
+
+## createElement()
+
+Creates the specified html element and adds on attributes if supplied.
+The function exposes a configuration based interface for element creation
+
+```js
+const badge = createElement({
+  type: 'div',
+  id: 'qp-RFfz2OIZSN',
+  classList: ['qp-badge', 'QubitPlacement'],
+  onClick: () => {
+    console.log('Danger Will Robinson')
+  },
+  innerHTML: '<div/>'
+})
 ```
