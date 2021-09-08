@@ -22,6 +22,7 @@ const cfg = {
           include: [
             path.join(__dirname, 'lib'),
             path.join(__dirname, 'dom'),
+            path.join(__dirname, 'html'),
             path.join(__dirname, 'test')
           ],
           use: [
@@ -58,7 +59,11 @@ function enableCoverage (cfg) {
   cfg.webpack.module.rules = [
     {
       test: /\.js$/,
-      include: [path.join(__dirname, 'lib'), path.join(__dirname, 'dom')],
+      include: [
+        path.join(__dirname, 'lib'),
+        path.join(__dirname, 'dom'),
+        path.join(__dirname, 'html')
+      ],
       loader: 'istanbul-instrumenter-loader'
     }
   ]

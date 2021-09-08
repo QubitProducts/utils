@@ -10,7 +10,11 @@ module.exports = function createElement ({
   const element = document.createElement(type)
 
   if (id) element.setAttribute('id', id)
-  if (classList) element.classList.add(...wrapInArray(classList))
+  if (classList) {
+    for (const className of wrapInArray(classList)) {
+      element.classList.add(className)
+    }
+  }
   if (onClick) element.onclick = onClick
   if (innerHTML) element.innerHTML = innerHTML
 
