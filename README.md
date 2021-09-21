@@ -5,7 +5,7 @@ Utilities for clientside code injection
 This repo contains these sets
 
 - @qubit/utils/dom
-- @qubit/html
+- @qubit/utils/html
 
 Each as a different purpose and should be required in separately as required to avoid build bloat
 
