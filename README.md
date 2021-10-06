@@ -75,9 +75,10 @@ function cb () {
 }
 ```
 
-## onEnterViewport(el, fn)
+## onEnterViewport(el, fn, [scrollTargetEl])
 
 Calls callback when `el` enters the viewport, returns a function that cancels and removes any event listeners. If you omit the callback, the function returns a promise. You should use restoreAll to restore in this case.
+*It accepts a third optional parameter `scrollTargetEl` which represents the element where the scroll listener will be attached. If not specified `window` will be used.*
 
 e.g.
 
