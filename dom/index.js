@@ -71,7 +71,7 @@ function onAnyEnterViewport (els, fn) {
   })
 }
 
-function onEnterViewport (el, fn) {
+function onEnterViewport (el, fn, scrollTargetEl = window) {
   if (_.isArray(el)) {
     return onAnyEnterViewport(el, fn)
   }
@@ -83,12 +83,12 @@ function onEnterViewport (el, fn) {
 
   const handleScroll = _.debounce(() => {
     if (isInViewPort(el)) {
-      window.removeEventListener('scroll', handleScroll)
+      scrollTargetEl.removeEventListener('scroll', handleScroll)
       fn()
     }
   }, 50)
-  window.addEventListener('scroll', handleScroll)
-  return once(() => window.removeEventListener('scroll', handleScroll))
+  scrollTargetEl.addEventListener('scroll', handleScroll)
+  return once(() => scrollTargetEl.removeEventListener('scroll', handleScroll))
 }
 
 function replace (target, el) {
