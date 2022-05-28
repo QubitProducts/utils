@@ -1,7 +1,7 @@
 /* globals describe it beforeEach afterEach */
 const Promise = require('sync-p')
 const _ = require('slapdash')
-const dom = require('../dom')
+const dom = require('../../dom')
 const sinon = require('sinon')
 const { expect } = require('chai')
 

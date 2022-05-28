@@ -138,7 +138,8 @@ function closest (element, selector) {
   if (window.Element.prototype.closest) {
     return window.Element.prototype.closest.call(element, selector)
   } else {
-    const matches = window.Element.prototype.matches ||
+    const matches =
+      window.Element.prototype.matches ||
       window.Element.prototype.msMatchesSelector ||
       window.Element.prototype.webkitMatchesSelector
 

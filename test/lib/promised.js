@@ -1,5 +1,5 @@
 /* globals describe it */
-const promised = require('../lib/promised')
+const promised = require('../../lib/promised')
 const sinon = require('sinon')
 const { expect } = require('chai')
 
